@@ -21,17 +21,7 @@ const request = require("request"),
   qs = require("qs"),
   session = require('express-session');
 
-const mysql = require("mysql");
-const connection = mysql.createConnection({
-  host: "localhost",
-  database: "DB"
-});
-
-connection.connect(function (err) {
-  if (err) throw err;
-  console.log("Connected to MySQL!");
-});
-
+// rando, cp
 
 // connect to the database
 
@@ -66,10 +56,7 @@ app.post("/webhook", (req, res) => {
 
       let sql = "INSERT INTO messages (phone_number_id, from, msg_body, captain_name) VALUES ?";
       let values = [[phone_number_id, from, msg_body, captain_name]];
-      connection.query(sql, [values], function (err, result) {
-        if (err) throw err;
-        console.log("Message saved to database");
-      });
+
 
 
       const myArray = msg_body.toLowerCase().split(" ");
@@ -216,7 +203,11 @@ app.get("/webhook", (req, res) => {
   /**
    * UPDATE YOUR VERIFY TOKEN
    *This will be the Verify Token value when you set up webhook
+
+   
    **/
+
+  console.log("get called");
   const verify_token = process.env.VERIFY_TOKEN;
 
   // Parse params from the webhook verification request
@@ -236,4 +227,12 @@ app.get("/webhook", (req, res) => {
       res.sendStatus(403);
     }
   }
+});
+
+app.get("/webhook2", (req, res) => {
+  
+  console.log("get called");
+  // Check if a token and mode were sent
+      console.log("WEBHOOK_VERIFIED");
+      res.status(200).send(challenge);
 });
